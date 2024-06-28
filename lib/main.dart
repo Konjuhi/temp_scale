@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temp_scale/screens/office_grid_screen.dart';
+import 'package:temp_scale/screens/office_dashboard_screen.dart';
 import 'dart:math';
 import 'models/office.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Office Temperature Control',
-      home: OfficeGridPage(
+      home: OfficeDashboardScreen(
         offices: [
           ...generateOfficesForFloor('1', 12, 1),
           ...generateOfficesForFloor('2', 12, 13),

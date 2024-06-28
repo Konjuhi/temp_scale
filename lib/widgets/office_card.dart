@@ -22,6 +22,9 @@ class OfficeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      splashFactory: InkSplash.splashFactory,
       onTap: onTap,
       child: ConstrainedBox(
         constraints: const BoxConstraints.tightFor(width: 200, height: 150),

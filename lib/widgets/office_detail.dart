@@ -51,7 +51,7 @@ class OfficeDetailsDialogState extends State<OfficeDetailsDialog> {
           ),
           const SizedBox(height: 10),
           Text(
-            'Heating set to ${heatingSet.toStringAsFixed(2)}°C',
+            'Heating set to ${heatingSet.toStringAsFixed(2)}°',
             style: const TextStyle(fontSize: 18, color: Colors.white),
           ),
           const SizedBox(height: 10),

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/office.dart';
 import '../widgets/office_card.dart';
 
-class OfficeGridPage extends StatefulWidget {
+class OfficeDashboardScreen extends StatefulWidget {
   final List<Office> offices;
 
-  const OfficeGridPage({super.key, required this.offices});
+  const OfficeDashboardScreen({super.key, required this.offices});
 
   @override
-  OfficeGridPageState createState() => OfficeGridPageState();
+  OfficeDashboardScreenState createState() => OfficeDashboardScreenState();
 }
 
-class OfficeGridPageState extends State<OfficeGridPage> {
+class OfficeDashboardScreenState extends State<OfficeDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,16 +64,16 @@ class OfficeGridPageState extends State<OfficeGridPage> {
             return OfficeCard(
               office: floorOffices[index],
               onTap: () => showOfficeDetails(context, floorOffices[index],
-                      (updatedOffice) {
-                    setState(() {
-                      int officeIndex = widget.offices.indexWhere((o) =>
+                  (updatedOffice) {
+                setState(() {
+                  int officeIndex = widget.offices.indexWhere((o) =>
                       o.officeNumber == updatedOffice.officeNumber &&
-                          o.floor == updatedOffice.floor);
-                      if (officeIndex != -1) {
-                        widget.offices[officeIndex] = updatedOffice;
-                      }
-                    });
-                  }),
+                      o.floor == updatedOffice.floor);
+                  if (officeIndex != -1) {
+                    widget.offices[officeIndex] = updatedOffice;
+                  }
+                });
+              }),
             );
           },
         ),
@@ -84,13 +84,10 @@ class OfficeGridPageState extends State<OfficeGridPage> {
   int getCrossAxisCount(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     if (screenWidth >= 1200) {
-      // Desktop
       return 8;
     } else if (screenWidth >= 600) {
-      // Tablet
       return 4;
     } else {
-      // Mobile
       return 2;
     }
   }
