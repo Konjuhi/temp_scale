@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/office.dart';
 import 'office_detail.dart';
 
@@ -26,37 +27,30 @@ class OfficeCard extends StatelessWidget {
       splashColor: Colors.transparent,
       splashFactory: InkSplash.splashFactory,
       onTap: onTap,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(width: 200, height: 150),
+      child: AspectRatio(
+        aspectRatio: 1.2,
         child: Card(
           color: _getBackgroundColor(office.heatingSet),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Text(
-                    'Office ${office.officeNumber}',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
+                Text(
+                  'Office ${office.officeNumber}',
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 const SizedBox(height: 4),
-                Flexible(
-                  child: Text(
-                    '${office.temperature}°C',
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                Text(
+                  '${office.temperature}°C',
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 const SizedBox(height: 4),
-                Flexible(
-                  child: Text(
-                    'Heating set to ${office.heatingSet}°',
+                Text(
+                  'Heating set to ${office.heatingSet}°',
                   overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, color: Colors.white),
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.white),
                 ),
               ],
             ),
@@ -64,6 +58,98 @@ class OfficeCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class OfficeDashboardScreen extends StatefulWidget {
+  final List<Office> offices;
+
+  const OfficeDashboardScreen({super.key, required this.offices});
+
+  @override
+  OfficeDashboardScreenState createState() => OfficeDashboardScreenState();
+}
+
+class OfficeDashboardScreenState extends State<OfficeDashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: ListView(
+        children: [
+          buildFloor(widget.offices.where((o) => o.floor == '1').toList(),
+              'Floor 1', context),
+          buildFloor(widget.offices.where((o) => o.floor == '2').toList(),
+              'Floor 2', context),
+          buildFloor(widget.offices.where((o) => o.floor == '3').toList(),
+              'Floor 3', context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFloor(
+      List<Office> floorOffices, String floorName, BuildContext context) {
+    int crossAxisCount = getCrossAxisCount(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16, bottom: 16, top: 16),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              floorName,
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+          ),
+        ),
+        const Divider(),
+        GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 4.0,
+            mainAxisSpacing: 4.0,
+            childAspectRatio: 1.2, // Maintaining a consistent aspect ratio
+          ),
+          itemCount: floorOffices.length,
+          itemBuilder: (context, index) {
+            return OfficeCard(
+              office: floorOffices[index],
+              onTap: () => showOfficeDetails(context, floorOffices[index],
+                  (updatedOffice) {
+                setState(() {
+                  int officeIndex = widget.offices.indexWhere((o) =>
+                      o.officeNumber == updatedOffice.officeNumber &&
+                      o.floor == updatedOffice.floor);
+                  if (officeIndex != -1) {
+                    widget.offices[officeIndex] = updatedOffice;
+                  }
+                });
+              }),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  int getCrossAxisCount(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth >= 1200) {
+      return 8;
+    } else if (screenWidth >= 600) {
+      return 4;
+    } else {
+      return 2;
+    }
   }
 }
 
